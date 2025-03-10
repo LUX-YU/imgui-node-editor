@@ -5,6 +5,9 @@ if(WIN32)
     set(CMAKE_DEBUG_POSTFIX d)
 endif()
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(lux-cmake-toolset CONFIG REQUIRED)
 find_package(imgui             CONFIG REQUIRED COMPONENTS core)
 
