@@ -3,21 +3,17 @@ cmake_minimum_required(VERSION 3.12)
 project(imgui-node-editor)
 
 # Define IMGUI_NODE_EDITOR_ROOT_DIR pointing to project root directory
-get_filename_component(IMGUI_NODE_EDITOR_ROOT_DIR ${CMAKE_SOURCE_DIR}/.. ABSOLUTE CACHE)
+get_filename_component(IMGUI_NODE_EDITOR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/.. ABSOLUTE CACHE)
 
 # Enable solution folders in Visual Studio and Folders in Xcode
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Point CMake where to look for module files.
-list(APPEND CMAKE_MODULE_PATH ${IMGUI_NODE_EDITOR_ROOT_DIR}/misc/cmake-modules)
+# list(APPEND CMAKE_MODULE_PATH ${IMGUI_NODE_EDITOR_ROOT_DIR}/misc/cmake-modules)
 
 # Node editor use C++14
 set(CMAKE_CXX_STANDARD            14)
 set(CMAKE_CXX_STANDARD_REQUIRED   YES)
-
-
-
-
 
 # Macro that will configure an example application
 macro(add_example_executable name)
@@ -38,11 +34,11 @@ macro(add_example_executable name)
     if (WIN32)
         set(_Example_Type WIN32)
 
-        set(ApplicationIcon ${IMGUI_NODE_EDITOR_ROOT_DIR}/examples/Application/Support/Icon.ico)
+        set(ApplicationIcon ${IMGUI_NODE_EDITOR_ROOT_DIR}/examples/application/support/Icon.ico)
         file(TO_NATIVE_PATH "${ApplicationIcon}" ApplicationIcon)
         string(REPLACE "\\" "\\\\" ApplicationIcon "${ApplicationIcon}")
         configure_file(
-            ${IMGUI_NODE_EDITOR_ROOT_DIR}/examples/Application/Support/Resource.rc.in
+            ${IMGUI_NODE_EDITOR_ROOT_DIR}/examples/application/support/Resource.rc.in
             ${CMAKE_CURRENT_BINARY_DIR}/Resource.rc
         )
         source_group(TREE "${IMGUI_NODE_EDITOR_ROOT_DIR}/examples" FILES ${_Example_CommonResources})
@@ -66,10 +62,7 @@ macro(add_example_executable name)
     endif()
 
     add_executable(${name} ${_Example_Type} ${_Example_Sources} ${_Example_Resources} ${_Example_CommonResources})
-
-    find_package(imgui REQUIRED)
-    find_package(imgui_node_editor REQUIRED)
-    target_link_libraries(${name} PRIVATE imgui imgui_node_editor application)
+    target_link_libraries(${name} PRIVATE node_editor application)
 
     set(_ExampleBinDir ${CMAKE_BINARY_DIR}/bin)
 
@@ -131,4 +124,4 @@ add_subdirectory(canvas-example)
 add_subdirectory(simple-example)
 add_subdirectory(widgets-example)
 add_subdirectory(basic-interaction-example)
-add_subdirectory(blueprints-example)
+# add_subdirectory(blueprints-example)

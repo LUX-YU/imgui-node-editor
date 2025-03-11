@@ -1,4 +1,5 @@
 project(application)
+find_package(imgui             CONFIG REQUIRED COMPONENTS glfw opengl3)
 
 set(_Application_Sources
     include/application.h
@@ -8,87 +9,40 @@ set(_Application_Sources
     source/config.h.in
     source/setup.h
     source/platform.h
-    source/platform_win32.cpp
     source/platform_glfw.cpp
     source/renderer.h
-    source/renderer_dx11.cpp
     source/renderer_ogl3.cpp
+    source/imgui_extend.cpp
 )
 
 add_library(application STATIC)
 
 target_include_directories(application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-find_package(imgui REQUIRED)
-find_package(stb_image REQUIRED)
-find_package(ScopeGuard REQUIRED)
-target_link_libraries(application PUBLIC imgui)
-target_link_libraries(application PRIVATE stb_image ScopeGuard)
+find_package(Stb REQUIRED)
+target_link_libraries(application PUBLIC node_editor imgui::glfw imgui::opengl3)
 
-if (WIN32)
-    list(APPEND _Application_Sources
-        source/imgui_impl_dx11.cpp
-        source/imgui_impl_dx11.h
-        source/imgui_impl_win32.cpp
-        source/imgui_impl_win32.h
-    )
+target_include_directories(
+    application PRIVATE
+    ${Stb_INCLUDE_DIR}
+)
 
-    set(_DXSDK_Dir  ${IMGUI_NODE_EDITOR_ROOT_DIR}/external/DXSDK)
-    set(_DXSDK_Arch x86)
-    if (${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-        set(_DXSDK_Arch x64)
-    endif()
+find_package(OpenGL REQUIRED)
+find_package(glfw3 3 REQUIRED)
 
-    add_library(dxerr STATIC ${_DXSDK_Dir}/src/dxerr.cpp)
-    target_include_directories(dxerr PUBLIC "${_DXSDK_Dir}/include")
-    set_property(TARGET dxerr PROPERTY FOLDER "external")
+target_link_libraries(application PRIVATE OpenGL::GL glfw)
 
-    add_library(d3dx11 UNKNOWN IMPORTED)
-    set_target_properties(d3dx11 PROPERTIES
-        IMPORTED_LOCATION               "${_DXSDK_Dir}/lib/${_DXSDK_Arch}/d3dx11.lib"
-        IMPORTED_LOCATION_DEBUG         "${_DXSDK_Dir}/lib/${_DXSDK_Arch}/d3dx11d.lib"
-        INTERFACE_INCLUDE_DIRECTORIES   "${_DXSDK_Dir}/include"
-        INTERFACE_LINK_LIBRARIES        "$<$<CONFIG:Debug>:dxerr>"
-    )
-
-    target_link_libraries(application PRIVATE d3d11.lib d3dcompiler.lib d3dx11)
-else()
-    find_package(OpenGL REQUIRED)
-    find_package(glfw3 3 REQUIRED)
-
-    if (APPLE)
-        target_link_libraries(application PRIVATE
-            "-framework CoreFoundation"
-            "-framework Cocoa"
-            "-framework IOKit"
-            "-framework CoreVideo"
-        )
-    endif()
-endif()
-
-if (OpenGL_FOUND)
-    set(HAVE_OPENGL YES)
-
-    target_include_directories(application PRIVATE ${OPENGL_INCLUDE_DIR})
-    target_link_libraries(application PRIVATE ${OPENGL_gl_LIBRARY})
-    list(APPEND _Application_Sources
-        source/imgui_impl_opengl3.cpp
-        source/imgui_impl_opengl3.h
-        source/imgui_impl_opengl3_loader.h
-    )
-endif()
-
-if (glfw3_FOUND)
-    set(HAVE_GLFW3 YES)
-
-    list(APPEND _Application_Sources
-        source/imgui_impl_glfw.cpp
-        source/imgui_impl_glfw.h
-    )
+if (APPLE)
     target_link_libraries(application PRIVATE
-        glfw
+        "-framework CoreFoundation"
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreVideo"
     )
 endif()
+
+set(HAVE_OPENGL YES)
+set(HAVE_GLFW3 YES)
 
 configure_file(
     source/config.h.in

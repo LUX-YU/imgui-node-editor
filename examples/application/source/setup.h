@@ -10,7 +10,7 @@
 // Define PLATFORM(x) which evaluate to 0 or 1 when
 // 'x' is: WINDOWS, MACOS or LINUX
 # if defined(_WIN32)
-#     define PLATFORM_PRIV_WINDOWS()     1
+#     define PLATFORM_PRIV_WINDOWS()     0
 # elif defined(__APPLE__)
 #     define PLATFORM_PRIV_MACOS()       1
 # elif defined(__linux__)

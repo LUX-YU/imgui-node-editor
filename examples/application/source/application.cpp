@@ -208,7 +208,7 @@ ImTextureID Application::LoadTexture(const char* path)
         return texture;
     }
     else
-        return nullptr;
+        return 0;
 }
 
 ImTextureID Application::CreateTexture(const void* data, int width, int height)

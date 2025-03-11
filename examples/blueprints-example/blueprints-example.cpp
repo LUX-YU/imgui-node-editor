@@ -1,5 +1,6 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <application.h>
+#include <imgui_extend.h>
 #include "utilities/builders.h"
 #include "utilities/widgets.h"
 
