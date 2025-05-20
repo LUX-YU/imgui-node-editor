@@ -1,5 +1,4 @@
 project(application)
-find_package(imgui             CONFIG REQUIRED COMPONENTS glfw opengl3)
 
 set(_Application_Sources
     include/application.h
@@ -20,17 +19,12 @@ add_library(application STATIC)
 target_include_directories(application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(Stb REQUIRED)
-target_link_libraries(application PUBLIC node_editor imgui::glfw imgui::opengl3)
+target_link_libraries(application PUBLIC node_editor imgui::glfw3 imgui::opengl3)
 
 target_include_directories(
     application PRIVATE
     ${Stb_INCLUDE_DIR}
 )
-
-find_package(OpenGL REQUIRED)
-find_package(glfw3 3 REQUIRED)
-
-target_link_libraries(application PRIVATE OpenGL::GL glfw)
 
 if (APPLE)
     target_link_libraries(application PRIVATE

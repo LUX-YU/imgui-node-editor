@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(lux-cmake-toolset CONFIG REQUIRED)
-find_package(imgui             CONFIG REQUIRED COMPONENTS core directx11 glfw opengl3)
+find_package(imgui             CONFIG REQUIRED COMPONENTS glfw3 opengl3)
 
 set(IMGUI_NODE_EDITOR_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui_node_editor.cpp
@@ -65,7 +65,7 @@ install(
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 )
 
-set(ENABLE_EXAMPLE true BOOL "Enable example")
+set(ENABLE_EXAMPLE false BOOL "Enable example")
 if(ENABLE_EXAMPLE)
     add_subdirectory(examples)    
 endif()
