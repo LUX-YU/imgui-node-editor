@@ -65,7 +65,7 @@ install(
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 )
 
-set(ENABLE_EXAMPLE OFF BOOL "Enable example")
+set(ENABLE_EXAMPLE OFF CACHE BOOL "Enable example")
 if(ENABLE_EXAMPLE)
     add_subdirectory(examples)    
 endif()
