@@ -82,8 +82,8 @@ bool PlatformGLFW::OpenMainWindow(const char* title, int width, int height)
     InitializerType initializer = nullptr;
 
 # if RENDERER(IMGUI_OGL3)
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #    if PLATFORM(MACOS)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -271,13 +271,8 @@ void PlatformGLFW::UpdatePixelDensity()
     glfwGetWindowContentScale(m_Window, &xscale, &yscale);
     float scale = xscale > yscale ? xscale : yscale;
 
-# if PLATFORM(WINDOWS)
-    float windowScale      = scale;
-    float framebufferScale = scale;
-# else
-    float windowScale      = 1.0f;
-    float framebufferScale = scale;
-# endif
+    float windowScale      = 1;
+    float framebufferScale = 1;
 
     SetWindowScale(windowScale); // this is how windows is scaled, not window content
 

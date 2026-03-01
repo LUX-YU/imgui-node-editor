@@ -19,26 +19,12 @@ add_library(application STATIC)
 target_include_directories(application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(Stb REQUIRED)
-
-# Link to imgui backend components only if they were found
-set(_app_imgui_libs node_editor)
-if(imgui_glfw3_FOUND)
-    list(APPEND _app_imgui_libs imgui::glfw3)
-endif()
-if(imgui_opengl3_FOUND)
-    list(APPEND _app_imgui_libs imgui::opengl3)
-endif()
-target_link_libraries(application PUBLIC ${_app_imgui_libs})
+target_link_libraries(application PUBLIC node_editor imgui::glfw imgui::opengl3)
 
 target_include_directories(
     application PRIVATE
     ${Stb_INCLUDE_DIR}
 )
-
-find_package(OpenGL REQUIRED)
-find_package(glfw3 3 REQUIRED)
-
-target_link_libraries(application PRIVATE OpenGL::GL glfw)
 
 if (APPLE)
     target_link_libraries(application PRIVATE
