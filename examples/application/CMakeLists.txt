@@ -18,8 +18,24 @@ add_library(application STATIC)
 
 target_include_directories(application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Stb from vcpkg provides a FindStb.cmake module
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_PREFIX_PATH}")
+foreach(_prefix ${CMAKE_PREFIX_PATH})
+    if(EXISTS "${_prefix}/share/stb")
+        list(APPEND CMAKE_MODULE_PATH "${_prefix}/share/stb")
+    endif()
+endforeach()
 find_package(Stb REQUIRED)
-target_link_libraries(application PUBLIC node_editor imgui::glfw imgui::opengl3)
+
+# Link imgui backend components
+set(_app_imgui_libs node_editor)
+if(TARGET imgui::glfw3)
+    list(APPEND _app_imgui_libs imgui::glfw3)
+endif()
+if(TARGET imgui::opengl3)
+    list(APPEND _app_imgui_libs imgui::opengl3)
+endif()
+target_link_libraries(application PUBLIC ${_app_imgui_libs})
 
 target_include_directories(
     application PRIVATE
@@ -43,9 +59,10 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/source/config.h
 )
 
+# Force GLFW/OpenGL3 backend (DX11/Win32 backends not available)
 target_compile_definitions(application PRIVATE
-    #BACKEND_CONFIG=IMGUI_GLFW
-    #RENDERER_CONFIG=IMGUI_OGL3
+    BACKEND_CONFIG=IMGUI_GLFW
+    RENDERER_CONFIG=IMGUI_OGL3
 )
 
 target_include_directories(application PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/source)
