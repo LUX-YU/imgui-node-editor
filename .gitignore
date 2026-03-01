@@ -1,8 +1,10 @@
 .vs
 .vscode
+.idea
 .build*
 .DS_Store
 bin
+cmake-build-*
 [Bb]uild
 *.VC.db
 *.VC.opendb

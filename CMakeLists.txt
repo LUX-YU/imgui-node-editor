@@ -9,7 +9,28 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(lux-cmake-toolset CONFIG REQUIRED)
-find_package(imgui             CONFIG REQUIRED COMPONENTS core directx11 glfw opengl3)
+
+# Build required imgui components list based on platform
+set(_IMGUI_COMPONENTS core vulkan glfw3 opengl3)
+if(WIN32)
+    list(APPEND _IMGUI_COMPONENTS directx11)
+endif()
+
+# Probe which optional components are actually installed
+set(_IMGUI_FOUND_COMPONENTS)
+foreach(_comp IN LISTS _IMGUI_COMPONENTS)
+    find_package(imgui CONFIG QUIET COMPONENTS ${_comp})
+    if(imgui_${_comp}_FOUND OR imgui_FOUND)
+        list(APPEND _IMGUI_FOUND_COMPONENTS ${_comp})
+    endif()
+endforeach()
+
+# Fall back: at minimum require core
+if(NOT _IMGUI_FOUND_COMPONENTS)
+    set(_IMGUI_FOUND_COMPONENTS core)
+endif()
+
+find_package(imgui CONFIG REQUIRED COMPONENTS ${_IMGUI_FOUND_COMPONENTS})
 
 set(IMGUI_NODE_EDITOR_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/imgui_node_editor.cpp

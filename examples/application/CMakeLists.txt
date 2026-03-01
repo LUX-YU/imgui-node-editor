@@ -1,5 +1,4 @@
 project(application)
-find_package(imgui             CONFIG REQUIRED COMPONENTS glfw opengl3)
 
 set(_Application_Sources
     include/application.h
@@ -20,7 +19,16 @@ add_library(application STATIC)
 target_include_directories(application PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(Stb REQUIRED)
-target_link_libraries(application PUBLIC node_editor imgui::glfw imgui::opengl3)
+
+# Link to imgui backend components only if they were found
+set(_app_imgui_libs node_editor)
+if(imgui_glfw3_FOUND)
+    list(APPEND _app_imgui_libs imgui::glfw3)
+endif()
+if(imgui_opengl3_FOUND)
+    list(APPEND _app_imgui_libs imgui::opengl3)
+endif()
+target_link_libraries(application PUBLIC ${_app_imgui_libs})
 
 target_include_directories(
     application PRIVATE
