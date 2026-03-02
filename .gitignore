@@ -6,6 +6,7 @@
 .DS_Store
 bin
 cmake-build-*
+[Bb]uild-*
 [Bb]uild
 *.VC.db
 *.VC.opendb
