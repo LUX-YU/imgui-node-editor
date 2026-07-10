@@ -75,5 +75,18 @@ install(
 
 set(ENABLE_EXAMPLE OFF CACHE BOOL "Enable example")
 if(ENABLE_EXAMPLE)
-    add_subdirectory(examples)    
+    add_subdirectory(examples)
 endif()
+
+# ── Packaging (CPack → .deb). LUX fork of imgui-node-editor. Depends on the imgui
+# fork (links imgui::core), so the imgui package is declared.
+lux_configure_packaging(
+    NAME     node_editor
+    VERSION  0.0.0
+    SUMMARY  "imgui-node-editor (LUX fork): node/graph editor for Dear ImGui"
+    VENDOR   "LUX-YU"
+    CONTACT  "LUX-YU <chenhui.lux.yu@outlook.com>"
+    HOMEPAGE "https://github.com/LUX-YU/imgui-node-editor"
+    DEB_DEPENDS  "imgui" "lux-cmake-toolset (>= 0.5.0)"
+    RPM_REQUIRES "imgui" "lux-cmake-toolset >= 0.5.0"
+)
